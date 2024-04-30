@@ -1,19 +1,10 @@
-/*******************************************************************************************
- *
- *   raylib [shapes] example - Draw basic shapes 2d (rectangle, circle, line...)
- *
- *   Example originally created with raylib 1.0, last time updated with raylib 4.2
- *
- *   Example licensed under an unmodified zlib/libpng license, which is an OSI-certified,
- *   BSD-like license that allows static linking with closed source software
- *
- *   Copyright (c) 2014-2024 Ramon Santamaria (@raysan5)
- *
- ********************************************************************************************/
+#include <lightray/raylib_application.h>
+#include <lightray/raylib_window.h>
+#include <lightray/shape.h>
 
-#include "raylib_application.h"
-#include "raylib_window.h"
-#include "raylib.h"
+#include <raylib.h>
+
+using namespace lightray;
 
 class DrawingWindow : public lightray::RaylibWindow {
 private:
@@ -41,7 +32,9 @@ public:
         DrawText("some basic shapes available on raylib", 20, 20, 20, DARKGRAY);
 
         // Circle shapes and lines
-        DrawCircle(this->width() / 5, 120, 35, DARKBLUE);
+        
+        circle(this->width() / 5, 60, 30);
+        //DrawCircle(this->width() / 5, 120, 35, DARKBLUE);
         DrawCircleGradient(this->width() / 5, 220, 60, GREEN, SKYBLUE);
         DrawCircleLines(this->width() / 5, 340, 80, DARKBLUE);
 

@@ -1,4 +1,4 @@
-#include "raylib_window.h"
+#include "lightray/raylib_window.h"
 
 using namespace lightray;
 

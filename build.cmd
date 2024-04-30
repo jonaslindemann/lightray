@@ -12,7 +12,7 @@ echo.
 set action=%1
 
 if %action%=="" (
-    set action=debug
+    set action=config
 )
 
 echo *** Action: %action%
@@ -28,7 +28,7 @@ if %action%==clean (
 if not exist %DEBUG_DIR% mkdir %DEBUG_DIR%  
 if not exist %RELEASE_DIR% mkdir %RELEASE_DIR%  
 
-if %action%==debug (
+if %action%==config (
     echo *** Configuring debug build
     echo.
     cmake -B %DEBUG_DIR% -DCMAKE_BUILD_TYPE=Debug --preset default
@@ -36,10 +36,7 @@ if %action%==debug (
     echo *** Building debug build
     echo.
     cmake --build %DEBUG_DIR% --config Debug -- /m
-    exit /b 0
-)
-
-if %action%==release (
+    echo.
     echo *** Configuring release build
     echo.
     cmake -B %RELEASE_DIR% -DCMAKE_BUILD_TYPE=Release --preset default
