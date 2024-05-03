@@ -35,6 +35,19 @@ void RaylibApplication::loop()
 
     while (!WindowShouldClose()) // Detect window close button or ESC key
     {
+        if (IsWindowResized())
+            m_window->onResize(GetRenderWidth(), GetRenderHeight());
+
+        // Check keyboard
+
+        auto keycode = GetKeyPressed();
+
+        while (keycode != 0)
+        {
+			m_window->onKeyPressed(keycode);
+			keycode = GetKeyPressed();
+		}
+
         m_window->onUpdate();
         m_window->onClear();
         BeginDrawing();

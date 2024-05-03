@@ -6,9 +6,17 @@
 
 using namespace lightray;
 
+enum class DrawShapes {
+	CIRCLE,
+	RECTANGLE
+};
+
 class DrawingWindow : public lightray::RaylibWindow {
 private:
     float m_rotation{0.0f};
+    DrawShapes m_drawShapes{DrawShapes::CIRCLE};
+    RectMode m_rectMode{RectMode::CORNER};
+    EllipseMode m_ellipseMode{EllipseMode::CENTER};
 
 public:
     DrawingWindow(int width, int height, std::string title) : RaylibWindow(width, height, title)
@@ -18,6 +26,31 @@ public:
     {
         return std::make_shared<DrawingWindow>(width, height, title);
     }
+
+    virtual void onKeyPressed(int key) override
+    {
+		if (key == KEY_C)
+			m_drawShapes = DrawShapes::CIRCLE;
+		else if (key == KEY_R)
+			m_drawShapes = DrawShapes::RECTANGLE;
+        else if (key == KEY_ONE)
+			m_rectMode = RectMode::CORNER;
+		else if (key == KEY_TWO)
+			m_rectMode = RectMode::CORNERS;
+		else if (key == KEY_THREE)
+			m_rectMode = RectMode::CENTER;
+		else if (key == KEY_FOUR)
+			m_rectMode = RectMode::RADIUS;
+		else if (key == KEY_FIVE)
+			m_ellipseMode = EllipseMode::CENTER;
+		else if (key == KEY_SIX)
+			m_ellipseMode = EllipseMode::RADIUS;
+		else if (key == KEY_SEVEN)
+			m_ellipseMode = EllipseMode::CORNER;
+
+        rectMode(m_rectMode);
+        ellipseMode(m_ellipseMode);
+	}
 
     virtual void onSetup() override
     {}
@@ -33,37 +66,20 @@ public:
 
         // Circle shapes and lines
 
-        fill(DARKBLUE);
-        stroke(RED);
-        strokeWeight(3.0f);
-        // noStroke();
-        noFill();
-        circle(this->width() / 5.0f, 120, 35);
+        if (m_drawShapes == DrawShapes::CIRCLE)
+        {
+            circle(224, 184, 220);
+            circle(224, 184, 5);
+        }
+        else if (m_drawShapes == DrawShapes::RECTANGLE)
+        {
+            rect(120, 80, 220, 220);
+            circle(120, 80, 5);
+            rect(120 + 300, 80, 220, 220, 28);
+            circle(120 + 300, 80, 5);
+        }
 
-        DrawCircleGradient(this->width() / 5, 220, 60, GREEN, SKYBLUE);
-        DrawCircleLines(this->width() / 5, 340, 80, DARKBLUE);
 
-        // Rectangle shapes and lines
-        DrawRectangle(this->width() / 4 * 2 - 60, 100, 120, 60, RED);
-        DrawRectangleGradientH(this->width() / 4 * 2 - 90, 170, 180, 130, MAROON, GOLD);
-        DrawRectangleLines(this->width() / 4 * 2 - 40, 320, 80, 60, ORANGE); // NOTE: Uses QUADS internally, not lines
-
-        // Triangle shapes and lines
-        DrawTriangle(Vector2{this->width() / 4.0f * 3.0f, 80.0f}, Vector2{this->width() / 4.0f * 3.0f - 60.0f, 150.0f},
-                     Vector2{this->width() / 4.0f * 3.0f + 60.0f, 150.0f}, VIOLET);
-
-        DrawTriangleLines(Vector2{this->width() / 4.0f * 3.0f, 160.0f},
-                          Vector2{this->width() / 4.0f * 3.0f - 20.0f, 230.0f},
-                          Vector2{this->width() / 4.0f * 3.0f + 20.0f, 230.0f}, DARKBLUE);
-
-        // Polygon shapes and lines
-        DrawPoly(Vector2{this->width() / 4.0f * 3, 330}, 6, 80, m_rotation, BROWN);
-        DrawPolyLines(Vector2{this->width() / 4.0f * 3, 330}, 6, 90, m_rotation, BROWN);
-        DrawPolyLinesEx(Vector2{this->width() / 4.0f * 3, 330}, 6, 85, m_rotation, 6, BEIGE);
-
-        // NOTE: We draw all LINES based shapes together to optimize internal drawing,
-        // this way, all LINES are rendered in a single draw pass
-        DrawLine(18, 42, this->width() - 18, 42, BLACK);
     }
 };
 

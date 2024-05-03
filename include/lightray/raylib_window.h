@@ -28,6 +28,8 @@ public:
     virtual void onClear();
     virtual void onUpdate();
     virtual void onDraw();
+    virtual void onResize(int width, int height);
+    virtual void onKeyPressed(int key);
 };
 
 typedef std::shared_ptr<RaylibWindow> RaylibWindowPtr;

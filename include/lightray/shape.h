@@ -10,6 +10,13 @@ enum class EllipseMode {
     CORNER
 };
 
+enum class RectMode {
+	CORNER,
+	CORNERS,
+	CENTER,
+	RADIUS
+};
+
 class DrawingState {
 public:
     static DrawingState *instance()
@@ -36,14 +43,23 @@ public:
 
     void noStroke();
     void noFill();
+    void noGradientFill();
 
     bool drawStroke() const;
-
     bool drawFill() const;
+    bool drawGradient() const;
 
     void alpha(unsigned char alpha);
-
     unsigned char alpha() const;
+
+    void gradient(Color color1, Color color2);
+    void gradient1(Color color);
+    void gradient2(Color color);
+    Color gradient1() const;
+    Color gradient2() const;
+
+    void rectMode(RectMode mode);
+    RectMode rectMode() const;
 
 private:
     static DrawingState *m_instance;
@@ -56,10 +72,15 @@ private:
     // Rest of the class implementation...
     Color m_strokeColor{BLACK};
     float m_strokeWidth{1.0f};
-    Color m_fillColor{BLACK};
+    Color m_fillColor{WHITE};
     EllipseMode m_ellipseMode{EllipseMode::CENTER};
+    RectMode m_rectMode{RectMode::CORNER};
     bool m_drawStroke{true};
     bool m_drawFill{true};
+    bool m_drawGradient{false};
+
+    Color m_gradientColor1{RED};
+    Color m_gradientColor2{BLUE};
 
     unsigned char m_currentAlpha{255};
 };
@@ -70,6 +91,7 @@ void ellipse(float x, float y, float a, float b);
 void line(float x1, float y1, float x2, float y2);
 void point(float x, float y);
 void rect(float x, float y, float w, float h);
+void rect(float x, float y, float w, float h, float r);
 void square(float x, float y, float extent);
 void triangle(float x1, float y1, float x2, float y2, float x3, float y3);
 void quad(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4);
@@ -91,5 +113,20 @@ void noFill();
 
 bool drawStroke();
 bool drawFill();
+
+void alpha(unsigned char alpha);
+unsigned char alpha();
+
+void gradient(Color color1, Color color2);
+void gradient1(Color color);
+void gradient2(Color color);
+Color gradient1();
+Color gradient2();
+
+void noGradientFill();
+bool drawGradient();
+
+void rectMode(RectMode mode);
+RectMode rectMode();
 
 } // namespace lightray

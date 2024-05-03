@@ -36,11 +36,20 @@ void lightray::RaylibWindow::onSetup()
 
 void lightray::RaylibWindow::onClear()
 {
-    ClearBackground(RAYWHITE);
+    ClearBackground(Color(204, 204, 204, 255));
 }
 
 void lightray::RaylibWindow::onUpdate()
 {}
 
 void lightray::RaylibWindow::onDraw()
+{}
+
+void lightray::RaylibWindow::onResize(int width, int height)
+{
+	m_width = width;
+	m_height = height;
+}
+
+void lightray::RaylibWindow::onKeyPressed(int key)
 {}
