@@ -32,9 +32,14 @@ public:
         DrawText("some basic shapes available on raylib", 20, 20, 20, DARKGRAY);
 
         // Circle shapes and lines
-        
-        circle(this->width() / 5, 60, 30);
-        //DrawCircle(this->width() / 5, 120, 35, DARKBLUE);
+
+        fill(DARKBLUE);
+        stroke(RED);
+        strokeWeight(3.0f);
+        // noStroke();
+        noFill();
+        circle(this->width() / 5.0f, 120, 35);
+
         DrawCircleGradient(this->width() / 5, 220, 60, GREEN, SKYBLUE);
         DrawCircleLines(this->width() / 5, 340, 80, DARKBLUE);
 
