@@ -1,4 +1,4 @@
-#include <lightray/shape.h>
+#include <lightray/drawing.h>
 
 #include <raylib.h>
 
@@ -40,7 +40,7 @@ Color DrawingState::fill() const
 
 void DrawingState::ellipseMode(EllipseMode mode)
 {
-	m_ellipseMode = mode;
+    m_ellipseMode = mode;
 }
 
 EllipseMode DrawingState::ellipseMode()
@@ -56,12 +56,12 @@ void DrawingState::noStroke()
 void DrawingState::noFill()
 {
     m_drawFill = false;
-    m_drawGradient  = false;
+    m_drawGradient = false;
 }
 
 void DrawingState::noGradientFill()
 {
-	m_drawGradient = false;
+    m_drawGradient = false;
 }
 
 bool DrawingState::drawStroke() const
@@ -84,7 +84,7 @@ void DrawingState::alpha(unsigned char alpha)
     m_strokeColor.a = alpha;
     m_fillColor.a = alpha;
     m_gradientColor1.a = alpha;
-    m_gradientColor2.a = alpha; 
+    m_gradientColor2.a = alpha;
 }
 
 unsigned char DrawingState::alpha() const
@@ -94,20 +94,20 @@ unsigned char DrawingState::alpha() const
 
 void DrawingState::gradient(Color color1, Color color2)
 {
-	m_gradientColor1 = color1;
-	m_gradientColor2 = color2;
+    m_gradientColor1 = color1;
+    m_gradientColor2 = color2;
     m_drawGradient = true;
 }
 
 void DrawingState::gradient1(Color color)
 {
-	m_gradientColor1 = color;
+    m_gradientColor1 = color;
     m_drawGradient = true;
 }
 
 void DrawingState::gradient2(Color color)
 {
-	m_gradientColor2 = color;
+    m_gradientColor2 = color;
     m_drawGradient = true;
 }
 
@@ -118,7 +118,7 @@ Color DrawingState::gradient1() const
 
 Color DrawingState::gradient2() const
 {
-	return m_gradientColor2;
+    return m_gradientColor2;
 }
 
 void DrawingState::rectMode(RectMode mode)
@@ -129,6 +129,11 @@ void DrawingState::rectMode(RectMode mode)
 RectMode DrawingState::rectMode() const
 {
     return m_rectMode;
+}
+
+void background(Color color)
+{
+    ClearBackground(color);
 }
 
 void arc(float a, float b, float c, float d, float start, float stop)
@@ -142,32 +147,47 @@ void circle(float x, float y, float extent)
         x += extent / 2, y += extent / 2;
 
     if (drawGradient())
-        DrawCircleGradient(x, y, extent/2.0f, gradient1(), gradient2());
-    else
-        if (drawFill())
-            DrawCircle(x, y, extent/2.0f, fill());
+        DrawCircleGradient(x, y, extent / 2.0f, gradient1(), gradient2());
+    else if (drawFill())
+        DrawCircle(x, y, extent / 2.0f, fill());
 
-    float r1 = extent/2.0f - strokeWeight() / 2;
-    float r2 = extent/2.0f + strokeWeight() / 2;
+    float r1 = extent / 2.0f - strokeWeight() / 2;
+    float r2 = extent / 2.0f + strokeWeight() / 2;
 
     if (drawStroke())
         for (float r = r1; r < r2; r += 0.5f)
             DrawCircleLines(x, y, r, stroke());
 }
 
-void ellipse(float x, float y, float a, float b)
+void ellipse(float x, float y, float w, float h)
 {
-    DrawEllipse(x, y, a, b, RED);
+
+    if (rectMode() == RectMode::CORNERS)
+    {
+        w = w - x;
+        h = h - y;
+    }
+    else if (rectMode() == RectMode::CENTER)
+    {
+        x = x - w / 2;
+        y = y - h / 2;
+    }
+
+    if (drawFill())
+        DrawEllipse(x, y, w / 2.0, h / 2.0, fill());
+
+    if (drawStroke())
+        DrawEllipseLines(x, y, w / 2.0, h / 2.0, stroke());
 }
 
 void line(float x1, float y1, float x2, float y2)
 {
-    DrawLine(x1, y1, x2, y2, RED);
+    DrawLine(x1, y1, x2, y2, stroke());
 }
 
 void point(float x, float y)
 {
-    DrawPixel(x, y, RED);
+    DrawPixel(x, y, stroke());
 }
 
 void rect(float x, float y, float w, float h)
@@ -175,20 +195,19 @@ void rect(float x, float y, float w, float h)
 
     if (rectMode() == RectMode::CORNERS)
     {
-		w = w - x;
-		h = h - y;
-	}
+        w = w - x;
+        h = h - y;
+    }
     else if (rectMode() == RectMode::CENTER)
     {
-		x = x - w / 2;
-		y = y - h / 2;
-	}
+        x = x - w / 2;
+        y = y - h / 2;
+    }
 
     if (drawGradient())
-		DrawRectangleGradientH(x, y, w, h, gradient1(), gradient2());
-	else
-		if (drawFill())
-			DrawRectangle(x, y, w, h, fill());
+        DrawRectangleGradientH(x, y, w, h, gradient1(), gradient2());
+    else if (drawFill())
+        DrawRectangle(x, y, w, h, fill());
 
     if (drawStroke())
         DrawRectangleLinesEx(Rectangle{x, y, w, h}, strokeWeight(), stroke());
@@ -217,7 +236,7 @@ void rect(float x, float y, float w, float h, float r)
 
 void square(float x, float y, float extent)
 {
-    DrawRectangle(x, y, extent, extent, RED);
+    rect(x, y, extent, extent);
 }
 
 void triangle(float x1, float y1, float x2, float y2, float x3, float y3)
@@ -262,57 +281,57 @@ bool drawFill()
 
 void alpha(unsigned char alpha)
 {
-	DrawingState::instance()->alpha(alpha);
+    DrawingState::instance()->alpha(alpha);
 }
 
 unsigned char alpha()
 {
-	return DrawingState::instance()->alpha();
+    return DrawingState::instance()->alpha();
 }
 
 void gradient(Color color1, Color color2)
 {
-	DrawingState::instance()->gradient(color1, color2);
+    DrawingState::instance()->gradient(color1, color2);
 }
 
 void gradient1(Color color)
 {
-	DrawingState::instance()->gradient1(color);
+    DrawingState::instance()->gradient1(color);
 }
 
 void gradient2(Color color)
 {
-	DrawingState::instance()->gradient2(color);
+    DrawingState::instance()->gradient2(color);
 }
 
 Color gradient1()
 {
-	return DrawingState::instance()->gradient1();
+    return DrawingState::instance()->gradient1();
 }
 
 Color gradient2()
 {
-	return DrawingState::instance()->gradient2();
+    return DrawingState::instance()->gradient2();
 }
 
 void noGradientFill()
 {
-	DrawingState::instance()->noGradientFill();
+    DrawingState::instance()->noGradientFill();
 }
 
 bool drawGradient()
 {
-	return DrawingState::instance()->drawGradient();
+    return DrawingState::instance()->drawGradient();
 }
 
 void rectMode(RectMode mode)
 {
-	DrawingState::instance()->rectMode(mode);
+    DrawingState::instance()->rectMode(mode);
 }
 
 RectMode rectMode()
 {
-	return DrawingState::instance()->rectMode();
+    return DrawingState::instance()->rectMode();
 }
 
 void stroke(Color color)

@@ -11,4 +11,4 @@ include_directories( ${PROJECT_SOURCE_DIR}/include )
 
 find_package(raylib CONFIG REQUIRED)
 
-add_subdirectory(src)
+add_subdirectory(src) 

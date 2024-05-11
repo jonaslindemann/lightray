@@ -2,7 +2,8 @@
 
 using namespace lightray;
 
-RaylibApplication::RaylibApplication(RaylibWindowPtr window) : m_window(window)
+RaylibApplication::RaylibApplication(RaylibWindowPtr window)
+    : m_window(window), m_mousePos({0, 0}), m_lastMousePos({0, 0})
 {}
 
 std::unique_ptr<RaylibApplication> lightray::RaylibApplication::create(RaylibWindowPtr window)
@@ -33,10 +34,17 @@ void RaylibApplication::loop()
     m_window->onInit();
     m_window->onSetup();
 
+    m_mousePos = GetMousePosition();
+    m_lastMousePos = m_mousePos;
+
     while (!WindowShouldClose()) // Detect window close button or ESC key
     {
         if (IsWindowResized())
-            m_window->onResize(GetRenderWidth(), GetRenderHeight());
+        {
+            m_window->setWidth(GetRenderWidth());
+            m_window->setHeight(GetRenderHeight());
+            m_window->onResize(m_window->width(), m_window->height());
+        }
 
         // Check keyboard
 
@@ -44,9 +52,38 @@ void RaylibApplication::loop()
 
         while (keycode != 0)
         {
-			m_window->onKeyPressed(keycode);
-			keycode = GetKeyPressed();
-		}
+            m_window->onKeyPressed(keycode);
+            keycode = GetKeyPressed();
+        }
+
+        // Check mouse
+
+        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+        {
+            auto mousePos = GetMousePosition();
+            m_window->onMousePressed(MouseButton::LEFT_BUTTON, mousePos.x, mousePos.y);
+        }
+        if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON))
+        {
+            auto mousePos = GetMousePosition();
+            m_window->onMousePressed(MouseButton::RIGHT_BUTTON, mousePos.x, mousePos.y);
+        }
+        if (IsMouseButtonPressed(MOUSE_MIDDLE_BUTTON))
+        {
+            auto mousePos = GetMousePosition();
+            m_window->onMousePressed(MouseButton::MIDDLE_BUTTON, mousePos.x, mousePos.y);
+        }
+
+        // Check mouse move
+
+        m_mousePos = GetMousePosition();
+
+        if (m_mousePos.x != m_lastMousePos.x || m_mousePos.y != m_lastMousePos.y)
+            m_window->onMouseMove(m_mousePos.x, m_mousePos.y);
+
+        m_lastMousePos = m_mousePos;
+
+        // Update and draw
 
         m_window->onUpdate();
         m_window->onClear();
@@ -54,6 +91,8 @@ void RaylibApplication::loop()
         m_window->onDraw();
         EndDrawing();
     }
+
+    m_window->onClose();
 
     CloseWindow();
 }

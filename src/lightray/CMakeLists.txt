@@ -15,5 +15,5 @@ target_include_directories(lightray PRIVATE ${raylib_INCLUDE_DIRS})
 target_link_libraries(lightray PRIVATE ${raylib_LIBRARIES})
 #add_dependencies(ivfui ivf)
 INSTALL_TARGETS(/lib lightray)
-endif() 
+endif()  
 

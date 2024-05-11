@@ -9,6 +9,9 @@ class RaylibApplication {
 private:
     RaylibWindowPtr m_window;
 
+    Vector2 m_mousePos;
+    Vector2 m_lastMousePos;
+
 public:
     RaylibApplication(RaylibWindowPtr window);
 

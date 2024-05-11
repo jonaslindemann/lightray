@@ -11,10 +11,10 @@ enum class EllipseMode {
 };
 
 enum class RectMode {
-	CORNER,
-	CORNERS,
-	CENTER,
-	RADIUS
+    CORNER,
+    CORNERS,
+    CENTER,
+    RADIUS
 };
 
 class DrawingState {
@@ -85,9 +85,11 @@ private:
     unsigned char m_currentAlpha{255};
 };
 
+void background(Color color);
+
 void arc(float a, float b, float c, float d, float start, float stop);
 void circle(float x, float y, float extent);
-void ellipse(float x, float y, float a, float b);
+void ellipse(float x, float y, float w, float h);
 void line(float x1, float y1, float x2, float y2);
 void point(float x, float y);
 void rect(float x, float y, float w, float h);
