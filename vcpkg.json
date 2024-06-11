@@ -3,7 +3,8 @@
     "version-string": "1.0",
     "dependencies": [
         {
-            "name": "raylib"
+            "name": "raylib",
+            "name": "raygui"
         }
     ]
 }
